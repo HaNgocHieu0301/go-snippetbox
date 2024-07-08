@@ -2,12 +2,12 @@ package main
 
 import (
 	"database/sql"
-	_ "database/sql"
 	"flag"
 	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"net/http"
 	"os"
+	"snippetbox.hieuhn0301/internal/models"
 )
 
 // Define an application struct to hold the application-wide dependencies for the
@@ -16,12 +16,14 @@ import (
 type application struct {
 	errorLog *log.Logger
 	infoLog  *log.Logger
+	snippets *models.SnippetModel
 }
 
 func main() {
 	addr := flag.String("addr", ":4000", "HTTP network address")
 
-	dsn := flag.String("dsn", "user:1234@tcp(mysql:3306)/snippetbox?parseTime=true", "MySQL data source name")
+	dsn := flag.String("dsn", "user:1234@tcp(docker.for.mac.localhost:3306)/snippetbox?parseTime=true", "MySQL data source name")
+	//dsn := flag.String("dsn", "user:1234@tcp(mysql.localhost:3306)/snippetbox?parseTime=true", "MySQL data source name")
 
 	flag.Parse()
 	// log.New() -> create a logger for writing information messages.
@@ -48,6 +50,7 @@ func main() {
 	app := &application{
 		errorLog: errorLog,
 		infoLog:  infoLog,
+		snippets: &models.SnippetModel{DB: db},
 	}
 
 	srv := &http.Server{
