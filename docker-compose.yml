@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+  golang:
+    build: .
+    container_name: golang_container
+#    volumes:
+#      - .:/go/src/app  # Thư mục trên máy thật : Thư mục trong container
+    working_dir: /go/src/app
+    ports:
+      - "4000:4000"
+    networks:
+      - app-network
+    depends_on:
+        - mysql
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql_container
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: snippetbox
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 1234
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
