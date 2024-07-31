@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"html/template"
 	"net/http"
 	"snippetbox.hieuhn0301/internal/models"
 	"strconv"
@@ -20,28 +19,10 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	data := app.newTemplateData(r)
+	data.Snippets = snippets
 
-	for _, snippet := range snippets {
-		fmt.Fprintf(w, "%v\n", snippet)
-	}
-
-	//// Include the navigation partial in the template files.
-	//files := []string{
-	//	"./ui/html/base.html",
-	//	"./ui/html/partials/nav.html",
-	//	"./ui/html/pages/home.html",
-	//}
-	//
-	//ts, err := template.ParseFiles(files...)
-	//if err != nil {
-	//	app.serverError(w, err)
-	//	return
-	//}
-	//
-	//err = ts.ExecuteTemplate(w, "base", nil)
-	//if err != nil {
-	//	app.serverError(w, err)
-	//}
+	app.render(w, http.StatusOK, "home.html", data)
 }
 
 func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
@@ -63,19 +44,10 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	files := []string{"./ui/html/base.html", "./ui/html/partials/nav.html", "./ui/html/pages/view.html"}
+	data := app.newTemplateData(r)
+	data.Snippet = snippet
 
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-	// And then execute them. Notice how we are passing in the snippet
-	// data (a models.Snippet struct) as the final parameter?
-	err = ts.ExecuteTemplate(w, "base", snippet)
-	if err != nil {
-		app.serverError(w, err)
-	}
+	app.render(w, http.StatusOK, "view.html", data)
 }
 
 func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
