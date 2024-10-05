@@ -2,7 +2,9 @@ version: '3.9'
 
 services:
   golang:
-    build: .
+    build:
+        context: .
+        dockerfile: Dockerfile
     container_name: golang_container
     volumes:
       - .:/go/src/app  # Thư mục trên máy thật : Thư mục trong container
