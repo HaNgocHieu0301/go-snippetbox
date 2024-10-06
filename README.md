@@ -9,3 +9,9 @@
 
 - run cmd to export sql file in my computer:  
 `docker exec -i mysql_container mysqldump --defaults-file=/etc/mysql/my.cnf snippetbox > db_dump.sql`
+
+### Generate TLS Certificates
+Run cmd to generate tls certificates:
+- In Windows: 
+<br>
+`go run 'C:/Program Files/Go/src/crypto/tls/generate_cert.go' -rsa-bits=2048 --host=localhost`
